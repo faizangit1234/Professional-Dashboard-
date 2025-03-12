@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import postgres from "postgres";
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+// import { error } from "console";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -66,8 +67,10 @@ export async function createInvoice(prevState: State, formData: FormData) {
     `;
   } catch (error) {
     // If a database error occurs, return a more specific error.
+    console.error(error)
     return {
       message: 'Database Error: Failed to Create Invoice.',
+      
     };
   }
 
@@ -104,7 +107,12 @@ export async function updateInvoice(
       WHERE id = ${id}
     `;
   } catch (error) {
-    return { message: 'Database Error: Failed to Update Invoice.' };
+    // If a database error occurs, return a more specific error.
+    console.error(error)
+    return {
+      message: 'Database Error: Failed to Create Invoice.',
+      
+    };
   }
 
   revalidatePath('/dashboard/invoices');
